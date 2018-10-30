@@ -85,10 +85,10 @@ the member name. */
 
 SELECT Facilities.name as Facility, 
        concat(Members.firstname,' ', Members.surname) AS Member_name
-    FROM country_club.Members as Members
-    LEFT JOIN country_club.Bookings as Bookings
+    FROM country_club.Members Members
+    LEFT JOIN country_club.Bookings Bookings
       ON Bookings.memid = Members.memid
-    LEFT JOIN country_club.Facilities as Facilities
+    LEFT JOIN country_club.Facilities Facilities
       ON Facilities.facid = Bookings.facid
     WHERE Facilities.facid in (0,1)  /* shortlist tennis courts */
     AND Members.memid !=0 /* exclude the guest */
@@ -171,7 +171,10 @@ The output of facility name and total revenue, sorted by revenue. Remember
 that there's a different cost for guests and members! */
 
 SELECT Facilities.name as Facility,
-       SUM(CASE WHEN Bookings.memid != 0 THEN Bookings.slots*Facilities.membercost ELSE Bookings.slots*Facilities.guestcost END) AS Total_revenue
+       SUM(CASE WHEN Bookings.memid != 0 
+           THEN Bookings.slots*Facilities.membercost 
+           ELSE Bookings.slots*Facilities.guestcost END
+           ) AS Total_revenue
   FROM country_club.Bookings Bookings
   JOIN country_club.Facilities Facilities
     ON Facilities.facid = Bookings.facid
